@@ -5,10 +5,10 @@
 ├─airflow/
 │  ├─config/
 │  ├─dags/
+│  │  ├─scripts/
+│  │  └─utils/
 │  ├─data/
-│  ├─plugins/
-│  ├─scripts/
-│  └─utils/
+│  └─plugins/
 └─slackbot
     ├─controller/
     ├─services/
