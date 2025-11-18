@@ -1,8 +1,7 @@
-from utils.db_conn import db_pool
 from utils.snowflake_conn import sf_pool
 from psycopg2 import DatabaseError
 
-def select_daily_data():
+def get_main_data():
     conn = sf_pool.get_connection()
     try:
         cur = conn.cursor()

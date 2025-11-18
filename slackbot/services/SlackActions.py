@@ -1,13 +1,13 @@
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
-import requests
 from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
 
 from slack_sdk import WebClient
 from services.insert_user_selection import insert_user_selection
-from services.select_daily_data import select_daily_data
+from services.get_main_data import get_main_data
+from services.get_recommend_data import get_recommend_data
 
 from services.s3_services import S3Service
 from utils.get_random_paper import get_random_paper
@@ -49,7 +49,7 @@ class SlackActions():
     # 명령어 입력시 버튼 띄우는 메소드
     def send_info_data():
         try:
-            data = select_daily_data()
+            data = get_main_data()
             data = data[0]
             inform_text = f"""
             {date}의 데이터 정보입니다.
@@ -103,7 +103,7 @@ class SlackActions():
                                         'text': '논문 추천 받기'
                                     },
                                     'action_id': 'button_click_3',  # 이 ID는 나중에 상호작용을 처리하는 데 사용
-                                    'value': 'daily'  # 클릭 시 전달될 값
+                                    'value': 'recommend'  # 클릭 시 전달될 값
                                 },
                                 {
                                     'type': 'button',
@@ -132,16 +132,34 @@ class SlackActions():
             if button_value == 'random':
                 data = get_random_paper()
                 result_text = f"""
-                {date} 랜덤 추천입니다.
-                논문제목: {data.get('display_name') if len(data.get('display_name')) < 50 else data.get('display_name')[:50] + '...'}
-                1저자 : {data.get('1st_author')}
-                발행일자: {data.get('publication_date')}
-                인용수: {data.get('cited_by_count')}
-                논문타입: {data.get('type')}
-                논문분류: {data.get('domain')}
-                세부분류: {data.get('subfield')}
-                URL: {data.get('oa_url')}
-                """
+{date} 랜덤 추천입니다.
+논문제목: {data.get('display_name') if len(data.get('display_name')) < 50 else data.get('display_name')[:50] + '...'}
+1저자 : {data.get('1st_author')}
+발행일자: {data.get('publication_date')}
+인용수: {data.get('cited_by_count')}
+논문타입: {data.get('type')}
+논문분류: {data.get('domain')}
+세부분류: {data.get('subfield')}
+URL: {data.get('oa_url')}
+"""
+            elif button_value == 'recommend':
+                data = get_recommend_data()
+
+                result_text = f'''
+**오늘의 추천 논문**
+논문 수집 기간: {data[0] - timedelta(6)} ~ {data[0]}
+많이 인용된 논문
+  - {(data[1].split(','))[0]}
+  - {(data[1].split(','))[1]}
+  - {(data[1].split(','))[2]}
+오늘의 keyworkd = "{data[2]}"
+  - URL: {data[3]}
+주목할만한 논문
+'''
+                urls = data[4].split(',')
+                for url in urls:
+                    result_text += f'  - {url}\n'
+
             else:
                 result_text = button_value
                 pass
