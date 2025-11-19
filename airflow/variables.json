@@ -2,7 +2,7 @@
     "openalex_mailto": "kominji68@gmail.com",
     "openalex_url": "https://api.openalex.org/works",
     "pyalex_email": "sosoj1552@gmail.com",
-    "superset_dailypaper_url": "http://localhost:8088/superset/dashboard/12",
+    "superset_dailypaper_url": "http://host.docker.internal:8088/superset/dashboard/12",
     "superset_id": "admin",
     "superset_pw": "admin"
 }
