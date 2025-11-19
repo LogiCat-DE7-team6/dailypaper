@@ -47,7 +47,7 @@ sf_pool = SnowFlakeConn(
             password=sf_password,
             account=sf_account,
             warehouse=sf_warehouse,
-            database=sf_database
+            database=sf_database # test용 - dev, 서비스용 - dailypaper
         )
 
 #cur.commit() -> snowflake는 기본적으로 autocommit을 지원하기 떄문에 commit()하지 않아도 됌. 사용하려면 pool 만들때 autocommit=False 옵션 주면 된다

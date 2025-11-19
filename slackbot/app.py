@@ -7,8 +7,8 @@ import threading
 app = Flask(__name__)
 
 app.register_blueprint(bp)
-send_alert = cron_scheduler()
-# 크론에 따른 send message
+# 크론 기능 - 시간에 대한 알림 설정
+#send_alert = cron_scheduler()
 
 @app.errorhandler(Exception)
 def handle_exception(e):
@@ -21,6 +21,7 @@ def home():
     return "Hello, World!"
 
 if __name__ == '__main__':
-    scheduler_thread = threading.Thread(target=send_alert)
-    scheduler_thread.daemon = True
+    # 크론 기능을 위한 스케쥴러 쓰레드 생성. 없어도 돌아감.
+    #scheduler_thread = threading.Thread(target=send_alert)
+    #scheduler_thread.daemon = True
     app.run(host='0.0.0.0', debug=True, port=5000, threaded=True)

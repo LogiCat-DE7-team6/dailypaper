@@ -29,13 +29,16 @@ class DBConn():
 
 
 load_dotenv()
+db_host = os.getenv("DB_HOST")
 db_user = os.getenv("DB_USER")
 db_password = os.getenv("DB_PASSWORD")
+db_database = os.getenv("DB_DATABASE")
+
 
 
 db_pool = DBConn(
-            host='localhost',
-            database='local-practice',
+            host=db_host, # docker 이미지를 빌드해서 사용시 같은 network에 있어야함. 이떄 host는 db 컨테이너의 이름 혹은 컨테이너의 ip주소를 입력한다.
+            database=db_database,
             user=db_user,
             password=db_password
             )
