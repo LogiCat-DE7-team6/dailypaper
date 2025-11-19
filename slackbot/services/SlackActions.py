@@ -29,7 +29,6 @@ s3_credential = {
     's3_secret_key': s3_secret_key
 }
 
-image_url = S3Service(**s3_credential).generate_presigned_url(f"{date}.png")
 
 # 비동기 처리의 실패 여부 확인 함수 : 비동기 작업의 결과 확인 (결과가 없거나 예외가 있으면 raise 됨)
 def on_task_complete(future):
@@ -54,11 +53,16 @@ class SlackActions():
 또한 최근 3일 동안 가장 많이 추가된 분야는 {data[3]} - {data[4]}로, 총 {data[5]}개가 새로 등록되었습니다.
             """
             #- 비공개 논문 수: {data[8]}
-            
+            main_image_url = S3Service(**s3_credential).generate_presigned_url(f"main/{date}_main.png")
             client.chat_postMessage(
                     channel = '#test',  # 채널 ID나 이름
                     text = '아래 버튼을 클릭해보세요!',  # 메시지 텍스트
                     blocks = [
+                        {
+                            "type": "image",
+                            "image_url": main_image_url,
+                            "alt_text": "selected option image"
+                        },
                         {
                             'type': 'section',
                             'text': {
@@ -172,6 +176,7 @@ class SlackActions():
                 ]    
 
             elif button_value == 'field':
+                field_image_url = S3Service(**s3_credential).generate_presigned_url(f"field/{date}_field.png")
                 data = get_data(button_value)
                 result_text = f'''
                 :gear: Physical Sciences: {data[0]}\n
@@ -179,11 +184,11 @@ class SlackActions():
                 :hospital: Health Sciences: {data[2]}\n
                 :brain: Social Sciences: {data[3]}\n
                 :question: Unknown: {data[4]}
-                '''             
+                '''
                 blocks=[
                     {
                         "type": "image",
-                        "image_url": image_url,
+                        "image_url": field_image_url,
                         "alt_text": "selected option image"
                     },
                     {
