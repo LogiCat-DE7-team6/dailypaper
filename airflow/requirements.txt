@@ -4,3 +4,4 @@ numpy
 lingua-language-detector
 oauth2client
 gspread
+scikit-learn
