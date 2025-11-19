@@ -1,0 +1,11 @@
+FROM apache/airflow:2.9.1-python3.10
+
+USER root
+
+# root 사용자 상태에서 requirements.txt 파일 복사 및 권한 설정
+COPY --chown=airflow:root requirements.txt /requirements.txt
+
+USER airflow
+
+# Python 패키지 설치
+RUN pip install --no-cache-dir -r /requirements.txt
