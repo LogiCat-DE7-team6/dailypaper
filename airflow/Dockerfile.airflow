@@ -2,6 +2,30 @@ FROM apache/airflow:2.9.1-python3.10
 
 USER root
 
+RUN apt-get update && apt-get install -y \
+    wget \
+    unzip \
+    curl \
+    gnupg \
+    ca-certificates \
+    fonts-liberation \
+    libnss3 \
+    lsb-release \
+    xdg-utils \
+    libxss1 \
+    libappindicator3-1 \
+    libatk-bridge2.0-0 \
+    libgtk-3-0 \
+    --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
+
+# Chrome 설치
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable \
+    && rm -rf /var/lib/apt/lists/*
+
 # root 사용자 상태에서 requirements.txt 파일 복사 및 권한 설정
 COPY --chown=airflow:root requirements.txt /requirements.txt
 
@@ -9,3 +33,4 @@ USER airflow
 
 # Python 패키지 설치
 RUN pip install --no-cache-dir -r /requirements.txt
+

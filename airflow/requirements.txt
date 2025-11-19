@@ -5,3 +5,10 @@ lingua-language-detector
 oauth2client
 gspread
 scikit-learn
+selenium
+webdriver-manager
+boto3
+oauth2client
+gspread
+Pillow
+httpcore
