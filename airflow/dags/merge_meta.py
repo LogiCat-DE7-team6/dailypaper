@@ -7,14 +7,13 @@ from scripts.meta_task import *
 
 with DAG(
     dag_id='etl_meta_info',
-    start_date=datetime(2025, 11, 16),  # 날짜가 미래인 경우 실행이 안됨
-    schedule='0 0 * * *',  # 적당히 조절
-    is_paused_upon_creation=True,
+    start_date=datetime(2025, 11, 19),
+    schedule='0 0 * * *',
     catchup=False,
+    tags=['openalex'],
     default_args={
-        'retries': 1,
+        'retries': 20,
         'retry_delay': timedelta(minutes=3),
-        # 'on_failure_callback': slack.on_failure_callback,
     }
 ) as dag:
     s3_bucket = 'logicat-dailypaper'

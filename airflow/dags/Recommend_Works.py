@@ -10,23 +10,20 @@ from scripts.title_keyword import get_title_based_works
 from scripts.snowflake import insert_to_snowflake
 from scripts.referenced_works import pick_top_from_s3, fetch_details, load_to_snowflake
 
-
 import logging
 logger = logging.getLogger("airflow.task")
 logger.setLevel(logging.INFO)
 
-
-# airflow dags test TEMP_ETL_OpenAlex_Work 2025-11-15
-# ======================================
 with DAG(
-    dag_id = 'TEMP_ETL_OpenAlex_Work',
-    start_date = datetime(2025, 11, 15),
+    dag_id = 'etl_recommend_works',
+    start_date=datetime(2025, 11, 19),
     schedule = '0 0 * * *', # 매일 0시 0분에 실행
     catchup = False,
-    # default_args = {
-    #     'retries': 24,
-    #     'retry_delay': timedelta(seconds=30),
-    # },
+    tags=['openalex'],
+    default_args={
+        'retries': 20,
+        'retry_delay': timedelta(minutes=3),
+    }
 ) as dag :
     ## 1. Work 수집
     with TaskGroup(group_id="extract_recently_published_works") as extract_group:
@@ -40,7 +37,9 @@ with DAG(
         
         # Dynamic Task : 임시 json 파일을 S3에 업로드
         uploaded = upload_file_to_s3\
-            .partial(base_path='recommend/work', bucket='logicat-dailypaper', aws_conn_id="logicat_aws_conn")\
+            .partial(base_path='recommend/work'
+                    , bucket='logicat-dailypaper'
+                    , aws_conn_id="logicat_aws_conn")\
             .expand(input_fname=tmp_fnames)
             
         # Dynamic Task : 임시 json 파일 삭제
@@ -71,14 +70,18 @@ with DAG(
                             , conn_id="logicat_snowflake_conn"
                             )
         
+    ## 3. 인용논문 데이터 변환 및 Snowflake 적재
     with TaskGroup(group_id="transform_for_ref") as transform_group_3:
         dates = make_date_list(lookback_days=7)
+        
         top_ids = pick_top_from_s3(
                     date_list=dates,
                     bucket='logicat-dailypaper',
                     base_path='recommend/work',
                     aws_conn_id="logicat_aws_conn")
+        
         details = fetch_details(top_items=top_ids)
+        
         load_to_snowflake(records=details,
             schema="processed",
             table="ref_work",
