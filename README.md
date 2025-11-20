@@ -10,12 +10,12 @@
 2. 슬랙에서 ‘/’ 커맨드를 이용하여 수집된 논문의 메타 정보를 받아 볼 수 있으며, 이를 통해 사용자들이 최신 논문을 쉽게 접근하고, 최신 연구 동향을 파악할 수 있도록 돕는다.
 3. 슬랙api를 활용하여 사용자가 옵션을 선택하면, 해당 옵션의 기능을 제공한다.
 
-&nbsp
+&nbsp;
 
 ## 활용 기술 및 프레임 워크 
 <img width="1575" height="838" alt="image" src="https://github.com/user-attachments/assets/58459816-6d29-404e-affb-61ab413579f2" />
 
-&nbsp
+&nbsp;
 
 ## 프로젝트 흐름도
 <img width="1642" height="987" alt="image" src="https://github.com/user-attachments/assets/41ab4ad5-e389-47a1-9869-89f560fa88dc" />
@@ -23,7 +23,7 @@
 - Snowflake에 적재·정제된 데이터를 기반으로 Superset에서 시각화 대시보드를 구축 후 DAG를 통해 매일 이미지 형태로 S3에 저장
 - 사용자가 Slack 봇을 호출하면, Flask를 통해 요청을 처리하여 Snowflake DB와 S3의 최신 데이터 조회 후 요청 유형에 맞는 정보를 메시지 형태로 자동 응답
 
-&nbsp
+&nbsp;
 
 ## 프로젝트 폴더 구조
 ```
