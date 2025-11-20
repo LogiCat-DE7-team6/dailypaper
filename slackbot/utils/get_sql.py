@@ -64,7 +64,7 @@ recommend = [
         """,
         """
         SELECT 
-            url
+            title, url
         FROM slack.recommendations
         WHERE type = '인용논문'
             AND execution_date = (SELECT MAX(execution_date) FROM slack.recommendations);
@@ -78,14 +78,14 @@ recommend = [
         """,
         """
         SELECT 
-            url
+            title, url
         FROM slack.recommendations
         WHERE type = '키워드'
             AND execution_date = (SELECT MAX(execution_date) FROM slack.recommendations);
         """,
         """
         SELECT 
-            url
+            title, url
         FROM slack.recommendations
         WHERE type = '하이라이트'
             AND execution_date = (SELECT MAX(execution_date) FROM slack.recommendations);

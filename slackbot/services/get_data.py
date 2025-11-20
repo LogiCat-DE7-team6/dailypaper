@@ -13,11 +13,7 @@ def get_data(button_value):
             for i in range(len(sql)):
                 cur.execute(sql[i])
                 result = cur.fetchall()
-                if i == 1 or i == 4:
-                    result_str = ",".join(item[0] for item in result)
-                    data.append(result_str)
-                else:
-                    data.append(result[0][0])
+                data.append(result)
             return data
         except DatabaseError as e:
             raise e

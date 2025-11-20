@@ -1,4 +1,5 @@
 import os
+import textwrap
 from datetime import datetime, timedelta
 import pytz
 from concurrent.futures import ThreadPoolExecutor
@@ -21,7 +22,7 @@ executor = ThreadPoolExecutor(max_workers=5)
 client = WebClient(token=slack_token)
 
 timezone = pytz.timezone("Asia/Seoul")
-date = str(datetime.now(timezone))[0:10]
+date = datetime.now(timezone)
 
 s3_credential = {
     'bucket_name': bucket_name,
@@ -49,11 +50,11 @@ class SlackActions():
         try:
             data = get_data("main")
             inform_text = f"""
-:books: {data[0]} 기준 현재 보유 중인 논문은 총 {data[1]}개이며, 전일 대비 {data[2]}개 증가했습니다.
-또한 최근 3일 동안 가장 많이 추가된 분야는 {data[3]} - {data[4]}로, 총 {data[5]}개가 새로 등록되었습니다.
+:books: {data[0]} 기준 현재 보유 중인 논문은 총 {format(data[1], ",")}개이며, 전일 대비 {format(data[2], ",")}개 증가했습니다.
+또한 최근 3일 동안 가장 많이 추가된 분야는 {data[3]} - {data[4]}로, 총 {format(data[5], ",")}개가 새로 등록되었습니다.
             """
             #- 비공개 논문 수: {data[8]}
-            main_image_url = S3Service(**s3_credential).generate_presigned_url(f"main/{date}_main.png")
+            main_image_url = S3Service(**s3_credential).generate_presigned_url(f"main/{str(date-timedelta(1))[:10]}_main.png")
             client.chat_postMessage(
                     channel = '#test',  # 채널 ID나 이름
                     text = '아래 버튼을 클릭해보세요!',  # 메시지 텍스트
@@ -136,7 +137,8 @@ class SlackActions():
                 논문분류: {data.get('domain')}\n
                 세부분류: {data.get('subfield')}\n
                 OpenAlex-URL: {data.get('openalex_url')}\n
-                """             
+                """ 
+                result_text = textwrap.dedent(result_text)            
                 blocks=[
                     {
                         "type": "section",
@@ -151,19 +153,21 @@ class SlackActions():
                 data = get_data(button_value)
 
                 result_text = f'''
-                **오늘의 추천 논문**\n
-                논문 수집 기간: {data[0] - timedelta(6)} ~ {data[0]}\n
-                많이 인용된 논문\n
-                - {(data[1].split(','))[0]}\n
-                - {(data[1].split(','))[1]}\n
-                - {(data[1].split(','))[2]}\n
-                오늘의 keyword = "{data[2]}"\n
-                - URL: {data[3]}\n
-                주목할만한 논문
-                '''
-                urls = data[4].split(',')
+*오늘의 추천 논문*\n
+_논문 수집 기간: {data[0][0][0] - timedelta(6)} ~ {data[0][0][0]}_\n
+
+*많이 인용된 논문*\n
+    <{data[1][0][1]}|{data[1][0][0]}>\n
+    <{data[1][1][1]}|{data[1][1][0]}>\n
+    <{data[1][2][1]}|{data[1][2][0]}>\n
+*오늘의 keyword = "{data[2][0][0]}"*\n
+    <{data[3][0][1]}|{data[3][0][0]}>\n
+
+*주목할만한 논문*\n
+'''
+                urls = data[4]
                 for url in urls:
-                    result_text += f'- {url}\n                 '
+                    result_text += f'    <{url[1]}|{url[0]}>\n'
 
                 blocks=[
                     {
@@ -176,15 +180,16 @@ class SlackActions():
                 ]    
 
             elif button_value == 'field':
-                field_image_url = S3Service(**s3_credential).generate_presigned_url(f"field/{date}_field.png")
+                field_image_url = S3Service(**s3_credential).generate_presigned_url(f"field/{str(date-timedelta(1))[:10]}_field.png")
                 data = get_data(button_value)
                 result_text = f'''
-                :gear: Physical Sciences: {data[0]}\n
-                :microscope: Life Sciences: {data[1]}\n
-                :hospital: Health Sciences: {data[2]}\n
-                :brain: Social Sciences: {data[3]}\n
-                :question: Unknown: {data[4]}
+                :gear: Physical Sciences: {format(data[0], ",")}\n
+                :microscope: Life Sciences: {format(data[1], ",")}\n
+                :hospital: Health Sciences: {format(data[2], ",")}\n
+                :brain: Social Sciences: {format(data[3], ",")}\n
+                :question: Unknown: {format(data[4], ",")}
                 '''
+                result_text = textwrap.dedent(result_text)  
                 blocks=[
                     {
                         "type": "image",
@@ -206,17 +211,17 @@ class SlackActions():
                 result_text = f'''
                 :card_index_dividers: 논문 유형별 보유 현황을 안내드립니다.\n
 
-                - Article: {data[0]}개 ({data[0]/total*100:.1f}%)\n
-                - Book Chapter: {data[1]}개 ({data[1]/total*100:.1f}%)\n
-                - Dataset: {data[2]}개 ({data[2]/total*100:.1f}%)\n
-                - Preprint: {data[3]}개 ({data[3]/total*100:.1f}%)\n
-                - Dissertation: {data[4]}개 ({data[4]/total*100:.1f}%)\n
-                - Book: {data[5]}개 ({data[5]/total*100:.1f}%)\n
-                - Review: {data[6]}개 ({data[6]/total*100:.1f}%)\n
-                - Paratext: {data[7]}개 ({data[7]/total*100:.1f}%)\n
-                - Others: {data[8]}개 ({data[8]/total*100:.1f}%)
+                - Article: {format(data[0], ",")}개 ({data[0]/total*100:.1f}%)\n
+                - Book Chapter: {format(data[1], ",")}개 ({data[1]/total*100:.1f}%)\n
+                - Dataset: {format(data[2], ",")}개 ({data[2]/total*100:.1f}%)\n
+                - Preprint: {format(data[3], ",")}개 ({data[3]/total*100:.1f}%)\n
+                - Dissertation: {format(data[4], ",")}개 ({data[4]/total*100:.1f}%)\n
+                - Book: {format(data[5], ",")}개 ({data[5]/total*100:.1f}%)\n
+                - Review: {format(data[6], ",")}개 ({data[6]/total*100:.1f}%)\n
+                - Paratext: {format(data[7], ",")}개 ({data[7]/total*100:.1f}%)\n
+                - Others: {format(data[8]), ","}개 ({data[8]/total*100:.1f}%)
                 '''
-
+                result_text = textwrap.dedent(result_text)  
                 blocks=[
                     {
                         "type": "section",
@@ -230,7 +235,8 @@ class SlackActions():
             client.chat_postMessage(
                 channel="#test",
                 text=f"✅",
-                blocks=blocks
+                blocks=blocks,
+                unfurl_links=True
             )
             # user data 비동기 처리
             future = executor.submit(insert_user_selection, user, button_value)
