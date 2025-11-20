@@ -20,6 +20,7 @@ def slack_actions():
 @bp.route("/slack/actions/info", methods=["POST"])
 def get_paper_info():
     try:
-        return sa.send_info_data()
+        payload = request.form
+        return sa.send_info_data(payload)
     except Exception as e:
         raise e

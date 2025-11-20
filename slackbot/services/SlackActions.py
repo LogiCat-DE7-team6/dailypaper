@@ -46,7 +46,8 @@ class SlackActions():
         pass
 
     # 명령어 입력시 버튼 띄우는 메소드
-    def send_info_data():
+    def send_info_data(payload):
+        channel_id = payload["channel_id"]
         try:
             data = get_data("main")
             inform_text = f"""
@@ -56,7 +57,7 @@ class SlackActions():
             #- 비공개 논문 수: {data[8]}
             main_image_url = S3Service(**s3_credential).generate_presigned_url(f"main/{str(date-timedelta(1))[:10]}_main.png")
             client.chat_postMessage(
-                    channel = '#test',  # 채널 ID나 이름
+                    channel = channel_id,  # 채널 ID나 이름
                     text = '아래 버튼을 클릭해보세요!',  # 메시지 텍스트
                     blocks = [
                         {
@@ -124,6 +125,7 @@ class SlackActions():
         try:
             # 예: 모달에서 제출된 값 가져오기
             user = payload["user"]["username"]
+            channel_id = payload["channel"]["id"]
 
             if button_value == 'random':
                 data = get_random_paper()
@@ -233,7 +235,7 @@ _논문 수집 기간: {data[0][0][0] - timedelta(6)} ~ {data[0][0][0]}_\n
                 ]
 
             client.chat_postMessage(
-                channel="#test",
+                channel=channel_id,
                 text=f"✅",
                 blocks=blocks,
                 unfurl_links=True
