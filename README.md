@@ -25,6 +25,7 @@
 ## 🔄 프로젝트 흐름도
 <img width="1642" height="987" alt="image" src="https://github.com/user-attachments/assets/41ab4ad5-e389-47a1-9869-89f560fa88dc" />
 
+&nbsp;
 
 - Apache Airflow DAG를 통해 OpenAlex API 및 Pyalex 라이브러리를 활용한 데이터를 자동으로 수집하고, Snowflake에 저장·정제하는 파이프라인을 구성
 - Snowflake에 적재·정제된 데이터를 기반으로 Superset에서 시각화 대시보드를 구축 후 DAG를 통해 매일 이미지 형태로 S3에 저장
