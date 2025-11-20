@@ -44,10 +44,10 @@ dailypaper/
 │   │   └── utils/                # DAG에서 공통으로 사용하는 유틸리티 함수
 │   ├── data/                     # Airflow에서 사용하는 중간 데이터 저장소
 │   ├── plugins/                  # 커스텀 Airflow 플러그인
+│   ├── variables.json            # Airflow 사용 변수
 │   ├── Dockerfile.airflow
 │   ├── docker-compose.yaml
-│   ├── requirements.txt 
-│   └── variables.json            # Airflow 사용 변수
+│   └── requirements.txt 
 │
 ├── slackbot/                     # 슬랙 봇 서버 코드
 │   ├── controller/               # 슬랙 명령/이벤트 처리 로직
@@ -59,9 +59,10 @@ dailypaper/
 │
 ├── superset/                     # Superset 관련 구성
 │   ├── docker                    # requirements-local.txt 위치한 폴더
+│   ├── dashboard….zip            # Superset 대시보드 설정 파일
 │   ├── Dockerfile        
-│   ├── docker-compose-non-dev.yml
-│   └── dashboard….zip            # Superset 대시보드 설정 파일   
+│   └──  docker-compose-non-dev.yml
+│  
 └── README.md                     # 프로젝트 설명 파일
 ```
 
