@@ -76,7 +76,7 @@ dailypaper/
 ### 1. dailypaper 봇 호출
 
 호출 시점까지 수집된 데이터를 기준으로 **논문 보유 현황**을 대시보드와 요약글을 통해 제공한다.
-<img width="1659" height="985" alt="image" src="https://github.com/user-attachments/assets/9e83e1e3-6e1d-4544-a3f1-a83a56aa6117" />
+
 
 
 
