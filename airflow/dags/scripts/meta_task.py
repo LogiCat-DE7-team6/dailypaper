@@ -205,10 +205,10 @@ def load_main(meta_main, schema, table):
         values = (
             meta_main.get('execution_date'),
             meta_main.get('total', 0),
-            meta_main.get('physical_sciences', 0),
-            meta_main.get('life_sciences', 0),
-            meta_main.get('health_sciences', 0),
-            meta_main.get('social_sciences', 0),
+            meta_main.get('Physical_Sciences', 0),
+            meta_main.get('Life_Sciences', 0),
+            meta_main.get('Health_Sciences', 0),
+            meta_main.get('Social_Sciences', 0),
             meta_main.get('unknown', 0),
             meta_main.get('oa_true', 0)
         )
