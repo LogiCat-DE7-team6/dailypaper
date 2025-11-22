@@ -77,6 +77,8 @@ dailypaper/
 
 호출 시점까지 수집된 데이터를 기준으로 **논문 보유 현황**을 대시보드와 요약글을 통해 제공한다.
 
+<img width="1399" height="818" alt="image" src="https://github.com/user-attachments/assets/f4284798-8766-4b7e-9b3c-e7c70faf9855" />
+
 
 
 
@@ -84,11 +86,15 @@ dailypaper/
 
 출판 형태나 성격을 나타내는 분류(Article, Preprint, Book 등)를 기준으로 출간된 학술 저작물의 현황을 볼 수 있다.
 
+<img width="1409" height="833" alt="image" src="https://github.com/user-attachments/assets/158b3050-817b-4111-8f23-d014c55590e5" />
+
 
 
 ### 3. 주제별 보기
 
 4개의 도메인(Physical Sciences, Life Sciences, Health Sciences, Social Sciences)에 대한 현황과 세부 카테고리별 비율을 대시보드로 제공한다.
+
+<img width="1417" height="838" alt="image" src="https://github.com/user-attachments/assets/763a3fd1-bced-4f9a-a84e-8709d133bd3f" />
 
 
 
@@ -96,9 +102,14 @@ dailypaper/
 
 특정 기준별(인용이 많이된, 제목에 언급이 많이된, 최근 출간물 중 fwci 점수가 높은) 선정된 논문을 추천한다.
 
+<img width="1408" height="702" alt="image" src="https://github.com/user-attachments/assets/a89e73d6-bbcd-4cdd-91ae-0bbc24521f75" />
+
+
 
 ### 5. 랜덤 추천 받기
 
 openalex에 등록된 논문 중 1건을 랜덤으로 선정하여 제공한다.
+
+<img width="1408" height="829" alt="image" src="https://github.com/user-attachments/assets/e6b14fc0-9c3d-4e10-a4e3-a9d9e5177573" />
 
 
